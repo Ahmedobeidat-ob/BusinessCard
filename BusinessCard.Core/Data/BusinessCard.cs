@@ -15,10 +15,11 @@ namespace BusinessCard.Core.Data
         public string Email { get; set; }
         public string Phone { get; set; }
         public string? Address { get; set; }
-        public string? Photo { get; set; } // Base64 encoded photo stored as a byte array
+        public string? Photo { get; set; } 
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 
-        // Optional: method to convert Photo to Base64
-      
+       
+       
+
     }
 }

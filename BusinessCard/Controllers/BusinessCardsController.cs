@@ -106,5 +106,48 @@ namespace BusinessCard.API.Controllers
             var fileContents = await _cardsService.ExportToXmlAsync();
             return File(fileContents, "application/xml", "BusinessCards.xml");
         }
+
+        [HttpPost("import/xml")]
+        public async Task<IActionResult> ImportXml( IFormFile file)
+        {
+            try
+            {
+                await _cardsService.ImportFromXmlAsync(file);
+                return Ok("XML file imported successfully.");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Error importing XML file: {ex.Message}");
+            }
+        }
+
+
+
+        [HttpPost("import/csv")]
+        public async Task<IActionResult> ImportCsv( IFormFile file)
+        {
+            // Validate the file
+            if (file == null || file.Length == 0)
+            {
+                return BadRequest("File is empty or not provided.");
+            }
+
+            try
+            {
+                // Pass the IFormFile directly to the service
+                await _cardsService.ImportFromCsvAsync(file);
+                return Ok("CSV file imported successfully.");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Error importing CSV file: {ex.Message}");
+            }
+        }
+
+
     }
+
+
+
+
 }

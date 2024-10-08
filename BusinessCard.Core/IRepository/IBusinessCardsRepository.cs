@@ -10,6 +10,9 @@ namespace BusinessCard.Core.IRepository
 {
     public interface IBusinessCardsRepository:IGenericRepository<BusinessCards>
     {
+
         Task<IEnumerable<BusinessCards>> GetFilteredBusinessCardsAsync(FillterBusinessCardsDTo filter);
+
+    
     }
 }

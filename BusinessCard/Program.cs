@@ -5,6 +5,7 @@ using BusinessCard.Core.IRepository;
 using BusinessCard.Core.IService;
 using BusinessCard.Infra.Repository;
 using BusinessCard.Infra.Service;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
@@ -44,9 +45,21 @@ namespace BusinessCard
                     }
                 }
             }
+         
+
             builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             builder.Services.AddScoped<IBusinessCardsService, BusinessCardsService>();
             builder.Services.AddScoped<IBusinessCardsRepository, BusinessCardsRepository>();
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowSpecificOrigin",
+                    builder =>
+                    {
+                        builder.AllowAnyOrigin()
+                               .AllowAnyHeader()
+                               .AllowAnyMethod();
+                    });
+            });
             builder.Services.AddControllers();
             builder.Services.AddDbContext<BusinessCardDbContext>(option =>
             {
@@ -56,7 +69,10 @@ namespace BusinessCard
 
 
 
-
+          builder.Services.Configure<FormOptions>(options =>
+            {
+                options.MultipartBodyLengthLimit = 104857600; // 100 MB, adjust as needed
+            });
 
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -70,7 +86,9 @@ namespace BusinessCard
             {
                 app.UseSwagger();
                 app.UseSwaggerUI();
+
             }
+            app.UseCors("AllowSpecificOrigin");
 
             app.UseHttpsRedirection();
 
