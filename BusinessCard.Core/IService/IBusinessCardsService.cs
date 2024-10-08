@@ -12,12 +12,21 @@ namespace BusinessCard.Core.IService
 {
     public interface IBusinessCardsService : IBusinessCardsRepository
     {
-
-        public  Task<byte[]> ExportToCsvAsync();
+   
+        new  Task<byte[]> ExportToCsvAsync();
 
         public Task<byte[]> ExportToXmlAsync();
-        Task<IEnumerable<FillterBusinessCardsDTo>> GetFilteredBusinessCardsAsync(FillterBusinessCardsDTo filter);
+      new Task<IEnumerable<FillterBusinessCardsDTo>> GetFilteredBusinessCardsAsync(FillterBusinessCardsDTo filter);
 
-        public Task CreateBusinessCardAsync(BusinessCards businessCard, IFormFile file);
+        Task ImportFromXmlAsync(IFormFile file);
+
+        Task ImportFromCsvAsync(IFormFile file);
+
+
+
+
+
+
+
     }
 }

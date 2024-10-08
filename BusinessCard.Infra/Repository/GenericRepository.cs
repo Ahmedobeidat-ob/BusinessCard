@@ -26,13 +26,19 @@ namespace BusinessCard.Infra.Repository
 
         public async Task<T> GetAsync(int? id)
         {
-            if(id == null)
+            if(id <= 0)
             {
-                return null;
+                throw new ArgumentNullException(nameof(id), "Id cannot be null");
             }
 
 
-            return await _context.Set<T>().FindAsync(id);
+            var entity = await _context.Set<T>().FindAsync(id);
+            if (entity == null)
+            {
+                throw new InvalidOperationException($"Entity of type {typeof(T).Name} with id {id} was not found.");
+            }
+
+            return entity;
         }
         public async Task DeleteAsync(int id)
         {
@@ -63,5 +69,8 @@ namespace BusinessCard.Infra.Repository
            _context.Set<T>().Update(entity);
             await _context.SaveChangesAsync();
         }
+
+
+
     }
 }

@@ -16,5 +16,9 @@ namespace BusinessCard.Core.DTO
         public string? Address { get; set; }
         public String Photo { get; set; } // Base64 encoded photo stored as a byte array
         public DateTime CreatedAt { get; set; } = DateTime.Now;
+
+
     }
+
+
 }
