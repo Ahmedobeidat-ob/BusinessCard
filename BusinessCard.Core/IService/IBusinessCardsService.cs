@@ -22,11 +22,6 @@ namespace BusinessCard.Core.IService
 
         Task ImportFromCsvAsync(IFormFile file);
 
-
-
-
-
-
-
+        Task AddBusinessCardAsync(BusinessCardsDTo businessCardDto, IFormFile photoFile);
     }
 }

@@ -36,21 +36,36 @@ namespace BusinessCard.API.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<BusinessCards>> GetCardById(int id)
         {
-
-            if (id <= 0)
+            try
             {
-                return BadRequest("Invalid Id");
+                // Validate the id
+                if (id <= 0)
+                {
+                    return BadRequest("Invalid Id");
+                }
+
+                // Fetch the card from the service
+                var card = await _cardsService.GetAsync(id);
+
+                // Check if the card exists
+                if (card == null)
+                {
+                    return NotFound();
+                }
+
+                // Return the card
+                return Ok(card);
             }
-
-            var card = await _cardsService.GetAsync(id);
-
-            if (card == null)
+            catch (Exception ex)
             {
-                return NotFound();
-            }
+                // Log the exception (if logging is configured)
+                // Log.Error(ex, "Error fetching the business card");
 
-            return card;
+                // Return a generic error message
+                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while fetching the business card.");
+            }
         }
+
 
         [HttpPost]
 
@@ -123,18 +138,38 @@ namespace BusinessCard.API.Controllers
 
 
 
+        //[HttpPost("import/csv")]
+        //public async Task<IActionResult> ImportCsv( IFormFile file)
+        //{
+        //    // Validate the file
+        //    if (file == null || file.Length == 0)
+        //    {
+        //        return BadRequest("File is empty or not provided.");
+        //    }
+
+        //    try
+        //    {
+        //        // Pass the IFormFile directly to the service
+        //        await _cardsService.ImportFromCsvAsync(file);
+        //        return Ok("CSV file imported successfully.");
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return BadRequest($"Error importing CSV file: {ex.Message}");
+        //    }
+        //}
+
         [HttpPost("import/csv")]
-        public async Task<IActionResult> ImportCsv( IFormFile file)
+        public async Task<IActionResult> ImportCsv(IFormFile file)
         {
             // Validate the file
             if (file == null || file.Length == 0)
             {
-                return BadRequest("File is empty or not provided.");
+                return BadRequest("No file uploaded.");
             }
 
             try
             {
-                // Pass the IFormFile directly to the service
                 await _cardsService.ImportFromCsvAsync(file);
                 return Ok("CSV file imported successfully.");
             }
@@ -143,6 +178,14 @@ namespace BusinessCard.API.Controllers
                 return BadRequest($"Error importing CSV file: {ex.Message}");
             }
         }
+
+
+
+       
+
+
+
+
 
 
     }

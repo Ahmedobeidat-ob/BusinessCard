@@ -98,7 +98,7 @@ namespace BusinessCard.Infra.Service
 
             return field;
         }
-
+    
 
 
         public async Task<byte[]> ExportToXmlAsync()
@@ -161,6 +161,29 @@ namespace BusinessCard.Infra.Service
                 }
             }
         }
+
+
+
+
+          public async Task AddBusinessCardAsync(BusinessCardsDTo businessCardDto, IFormFile photoFile)
+    {
+        // Convert the uploaded photo file to Base64 if provided
+        if (photoFile != null && photoFile.Length > 0)
+        {
+            using (var memoryStream = new MemoryStream())
+            {
+                await photoFile.CopyToAsync(memoryStream);
+                var photoBytes = memoryStream.ToArray();
+                businessCardDto.Photo = Convert.ToBase64String(photoBytes); // Convert to Base64 string
+            }
+        }
+
+        // Map the DTO to the business card entity
+        var businessCard = _mapper.Map<BusinessCards>(businessCardDto);
+
+        // Add the new business card to the repository
+        await _repository.AddAsync(businessCard);
+    }
 
 
 
