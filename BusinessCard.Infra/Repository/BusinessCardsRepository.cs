@@ -29,15 +29,17 @@ namespace BusinessCard.Infra.Repository
 
         public async Task<IEnumerable<BusinessCards>> GetFilteredBusinessCardsAsync(FillterBusinessCardsDTo filter)
         {
-            IQueryable<BusinessCards> query =_context.BusinessCards;
+            IQueryable<BusinessCards> query = _context.BusinessCards;
 
             if (!string.IsNullOrEmpty(filter.Name))
             {
-                query = query.Where(b => b.Name.Contains(filter.Name));
+                query = query.Where(b => b.Name.ToLower().Contains(filter.Name.ToLower()));
             }
             if (!string.IsNullOrEmpty(filter.Gender))
             {
-                query = query.Where(b => b.Gender.Contains(filter.Gender));
+                // Perform case-insensitive filtering for Gender
+                string genderFilter = filter.Gender.ToLower();
+                query = query.Where(b => b.Gender.ToLower().Contains(genderFilter));
             }
             if (filter.DateOfBirth.HasValue)
             {
@@ -45,22 +47,23 @@ namespace BusinessCard.Infra.Repository
             }
             if (!string.IsNullOrEmpty(filter.Email))
             {
-                query = query.Where(b => b.Email.Contains(filter.Email));
+                query = query.Where(b => b.Email.ToLower().Contains(filter.Email.ToLower()));
             }
             if (!string.IsNullOrEmpty(filter.Phone))
             {
-                query = query.Where(b => b.Phone.Contains(filter.Phone));
+                query = query.Where(b => b.Phone.ToLower().Contains(filter.Phone.ToLower()));
             }
 
             return await query.ToListAsync();
         }
 
 
-       
 
 
 
-     
+
+
+
 
     }
 
