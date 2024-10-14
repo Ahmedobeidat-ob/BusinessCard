@@ -59,7 +59,7 @@ namespace BusinessCard.Infra.Service
             var csvBuilder = new StringBuilder();
 
             // Write CSV header
-            csvBuilder.AppendLine("Name,Gender,DateOfBirth,Email,Phone,Address,Photo,CreatedAt");
+            csvBuilder.AppendLine("name,gender,dateOfBirth,email,phone,address,photo,createdAt");
 
             foreach (var card in businessCards)
             {
